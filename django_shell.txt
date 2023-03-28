@@ -1,0 +1,124 @@
+Команды для Django shell. Задание 5.9 SkillFactory
+
+1. Импортируем файл models в консоль:
+from news_portal.models import *
+
+2. Создаем двух пользователей:
+User.objects.create(username=‘Пользователь1’)
+User.objects.create(username=‘Пользователь2’)
+
+3. Создаем два объекта модель Author, связанных с
+пользователями:
+user1 = User.objects.get(id=1)
+user2 = User.objects.get(id=2)
+Author.objects.create(user=user1)
+Author.objects.create(user=user2)
+
+4. Добавляем 4 категории в модель Category:
+Category.objects.create(category_name = ‘Категория1’)
+Category.objects.create(category_name = ‘Категория2’)
+Category.objects.create(category_name = ‘Категория3’)
+Category.objects.create(category_name = ‘Категория4’)
+
+5. Добавляем статьи и новости:
+author1 = Author.objects.all().first()
+author2 = Author.objects.all()[1]
+Post.objects.create(author=author1, selection_field=’news’,
+header_field=‘Заголовок новостей’, text_field=‘Текст новостей’)
+Post.objects.create(author=author1, selection_field=‘article’,
+header_field=‘Заголовок статьи’, text_field=‘Текст статьи’)
+Post.objects.create(author=author2, selection_field=‘article’,
+header_field=‘Заголовок статьи2’, text_field=‘Текст статьи2’)
+
+6. Создаем 4 комментария
+post1 = Post.objects.get(id=1)
+post2 = Post.objects.all()[1]
+post3 = Post objects.get(id=3)
+Comment.objects.create(post=post1, user=user1,
+comment_text=‘Противоположная точка зрения
+подразумевает, что явные признаки победы
+институционализации призывают нас к новым свершениям,
+которые, в свою очередь, должны быть подвергнуты целой
+серии независимых исследований.’)
+Comment.objects.create(post=post1, user=user1,
+comment_text=‘Также как существующая теория предполагает
+независимые способы реализации экспериментов,
+поражающих по своей масштабности и грандиозности.’)
+Comment.objects.create(post=post1, user=user2,
+comment_text=‘Банальные, но неопровержимые выводы, а
+также акционеры крупнейших компаний преданы социально-
+демократической анафеме.’)
+Comment.objects.create(post=post1, user=user1,
+comment_text=‘Таким образом, консультация с широким
+активом создаёт предпосылки для вывода текущих активов.’)
+Comment.objects.create(post=post2, user=user2,
+comment_text=‘Высокий уровень вовлечения представителей
+целевой аудитории является четким доказательством
+простого факта: граница обучения кадров предопределяет
+высокую востребованность кластеризации усилий!’)
+Comment.objects.create(post=post2, user=user1,
+comment_text=‘Ясность нашей позиции очевидна:
+современная методология разработки способствует
+повышению качества поставленных обществом задач.’)
+Comment.objects.create(post=post2, user=user1,
+comment_text=‘Как уже неоднократно упомянуто,
+интерактивные прототипы лишь добавляют фракционных
+разногласий и представлены в исключительно
+положительном свете.’)
+Comment.objects.create(post=post2, user=user2,
+comment_text=‘Как уже неоднократно упомянуто, тщательные
+исследования конкурентов набирают популярность среди
+определенных слоев населения, а значит, должны быть
+указаны как претенденты на роль ключевых факторов.’)
+Comment.objects.create(post=post3, user=user2,
+comment_text=‘Являясь всего лишь частью общей картины,
+некоторые особенности внутренней политики являются
+только методом политического участия и заблокированы в
+рамках своих собственных рациональных ограничений.’)
+Comment.objects.create(post=post3, user=user1,
+comment_text=‘Банальные, но неопровержимые выводы, а
+также независимые государства разоблачены.’)
+Comment.objects.create(post=post3, user=user1,
+comment_text=‘В целом, конечно, дальнейшее развитие
+различных форм деятельности обеспечивает актуальность
+новых предложений.’)
+Comment.objects.create(post=post3, user=user2,
+comment_text=‘Банальные, но неопровержимые выводы, а
+также явные признаки победы институционализации в равной
+степени предоставлены сами себе.’)
+
+7. Используем функции like(), dislike():
+Post.objects.get(id=1).like()
+Post.objects.get(id=1).like()
+Post.objects.get(id=2).like()
+Post.objects.get(id=2).dislike()
+Post.objects.get(id=2).like
+Post.objects.get(id=3).like()
+Post.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=12).like()
+Comment.objects.get(id=7).like()
+Comment.objects.get(id=7).like()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=8).like()
+Comment.objects.get(id=8).dislike()
+
+8. Обновляем рейтинг пользователей:
+ author1.update_rating()
+author2.update_rating()
+
+9.Выводим пользователя лучшего пользователя
+Author.objects.all().order_by(‘-
+user_rating’).values(‘user__username’, ‘user_rating’).first()
+
+10. Выводим дату добавления, username автора, рейтинг,
+заголовок и превью лучшей статьи, основывая на лайках
+дизлайках:
+Post.objects.order_by(‘-post_rating’).values(‘time_in’,
+‘author__user__username’, ‘post_rating’, ‘header_field’).first()
+
+11. Выводим все комментарии к этой статье:
+best_post = Post.objects.order_by(‘-post_rating’).first()
+best_post.comment.set.all().values(‘time_in’, ‘user__username’,
+‘comment_rating’, ‘comment_text’)
+
